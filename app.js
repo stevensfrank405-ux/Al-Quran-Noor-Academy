@@ -67,7 +67,8 @@ if ('IntersectionObserver' in window && !motionPreference.matches) {
       }
     });
   }, { threshold: 0.08 });
-  revealTargets.forEach(element => {
+  revealTargets.forEach((element, index) => {
+    element.style.setProperty('--reveal-delay', `${(index % 3) * 130}ms`);
     element.classList.add('reveal-pending');
     revealObserver.observe(element);
   });
@@ -114,3 +115,28 @@ backToTop.addEventListener('click', () => {
   const homeLink = document.querySelector('header .brand');
   homeLink?.focus({ preventScroll: true });
 });
+
+// A visible pause control keeps decorative motion optional.
+const motionToggle = document.createElement('button');
+motionToggle.type = 'button';
+motionToggle.className = 'motion-toggle';
+motionToggle.setAttribute('aria-label', 'Pause decorative animations');
+motionToggle.setAttribute('aria-pressed', 'false');
+motionToggle.textContent = 'Ⅱ Pause motion';
+document.body.append(motionToggle);
+let userPausedMotion = false;
+function updateMotionControls() {
+  const paused = userPausedMotion || motionPreference.matches;
+  document.documentElement.classList.toggle('motion-paused', paused);
+  motionToggle.setAttribute('aria-pressed', String(paused));
+  motionToggle.textContent = motionPreference.matches ? 'Motion reduced' : paused ? '▷ Resume motion' : 'Ⅱ Pause motion';
+  motionToggle.setAttribute('aria-label', paused ? 'Resume decorative animations' : 'Pause decorative animations');
+  motionToggle.disabled = motionPreference.matches;
+  if (paused) revealEverything();
+}
+motionToggle.addEventListener('click', () => {
+  userPausedMotion = !userPausedMotion;
+  updateMotionControls();
+});
+motionPreference.addEventListener('change', updateMotionControls);
+updateMotionControls();
