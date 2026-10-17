@@ -49,3 +49,68 @@ document.querySelector('#download-inquiry').addEventListener('click', () => {
 });
 
 }
+
+// Enhance visible content without hiding it when JavaScript is unavailable.
+const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+const revealTargets = document.querySelectorAll('.course-card, .explore-card, .module, .steps article, .approach-item, .quote-art, .reading-panel, .center-heading, .section-heading, .reflection-shell');
+let revealObserver;
+function revealEverything() {
+  revealTargets.forEach(element => element.classList.remove('reveal-pending'));
+  revealObserver?.disconnect();
+}
+if ('IntersectionObserver' in window && !motionPreference.matches) {
+  revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.remove('reveal-pending');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  revealTargets.forEach(element => {
+    element.classList.add('reveal-pending');
+    revealObserver.observe(element);
+  });
+}
+motionPreference.addEventListener('change', event => { if (event.matches) revealEverything(); });
+
+const reflectionSlides = [...document.querySelectorAll('[data-reflection]')];
+if (reflectionSlides.length) {
+  let reflectionIndex = 0;
+  document.querySelector('.reflection-controls').hidden = false;
+  function showReflection(direction) {
+    reflectionIndex = (reflectionIndex + direction + reflectionSlides.length) % reflectionSlides.length;
+    reflectionSlides.forEach((slide, index) => { slide.hidden = index !== reflectionIndex; });
+    document.querySelector('#reflection-count').textContent = `${reflectionIndex + 1} / ${reflectionSlides.length}`;
+  }
+  document.querySelector('#previous-reflection').addEventListener('click', () => showReflection(-1));
+  document.querySelector('#next-reflection').addEventListener('click', () => showReflection(1));
+}
+const backToTop = document.createElement('button');
+backToTop.type = 'button';
+backToTop.className = 'back-to-top';
+backToTop.textContent = '↑';
+backToTop.setAttribute('aria-label', 'Back to top');
+backToTop.hidden = true;
+document.body.append(backToTop);
+let scrollUpdatePending = false;
+function updateScrollState() {
+  const available = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = available > 0 ? Math.min(1, Math.max(0, window.scrollY / available)) : 0;
+  document.documentElement.style.setProperty('--reading-progress', progress);
+  backToTop.hidden = window.scrollY < 650;
+  scrollUpdatePending = false;
+}
+window.addEventListener('scroll', () => {
+  if (!scrollUpdatePending) {
+    scrollUpdatePending = true;
+    window.requestAnimationFrame(updateScrollState);
+  }
+}, { passive: true });
+window.addEventListener('resize', updateScrollState);
+updateScrollState();
+backToTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: motionPreference.matches ? 'instant' : 'smooth' });
+  const homeLink = document.querySelector('header .brand');
+  homeLink?.focus({ preventScroll: true });
+});

@@ -30,3 +30,7 @@ Forest green, warm ivory, and muted gold; responsive cards, mobile navigation, c
 - `privacy.html`: form behavior and external service disclosures.
 
 All navigation uses relative URLs for GitHub Pages project hosting. Course inquiry links preselect the course using a validated `course` query parameter. No server or package build is needed.
+
+## Motion and reflections
+
+Scroll reveals progressively enhance visible content using IntersectionObserver. Reduced-motion preferences disable motion; the reflection carousel is manually controlled and does not auto-advance. Quran excerpts include surah/ayah references and English renderings of meaning. Editorial reflection prompts are displayed separately. The home page also has a reading progress indicator and an accessible back-to-top button.
