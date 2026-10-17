@@ -19,3 +19,14 @@ The trial inquiry form validates required fields and prepares a message that can
 ## Design
 
 Forest green, warm ivory, and muted gold; responsive cards, mobile navigation, course selection, expandable FAQs, and an original SVG Quran illustration. Google Fonts are optional: system fonts work offline. No analytics or cookies are used by the application. Google Fonts requests are subject to Google's privacy practices.
+
+## Explore pages
+
+- `courses.html`: course comparison and suggested starting points.
+- `noorani-qaida.html`, `tajweed.html`, `memorization.html`: detailed course outlines and course-specific inquiry links.
+- `about.html`: purpose, learning approach, and academy values.
+- `student-guide.html`: preparation, home practice, parent guidance, time zones, and an interactive checklist.
+- `admissions.html`: enrollment guidance, FAQs, and the local inquiry composer.
+- `privacy.html`: form behavior and external service disclosures.
+
+All navigation uses relative URLs for GitHub Pages project hosting. Course inquiry links preselect the course using a validated `course` query parameter. No server or package build is needed.

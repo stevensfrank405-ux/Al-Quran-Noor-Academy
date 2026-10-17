@@ -10,11 +10,16 @@ nav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
   nav.classList.remove('open');
 }));
 document.querySelectorAll('[data-course]').forEach(link => link.addEventListener('click', () => {
-  document.querySelector('#course').value = link.dataset.course;
+  const select = document.querySelector('#course');
+  if (select) select.value = link.dataset.course;
 }));
 document.querySelector('#year').textContent = new Date().getFullYear();
 const form = document.querySelector('#trial-form');
 const message = document.querySelector('#inquiry-message');
+if (form) {
+const selectedCourse = new URLSearchParams(window.location.search).get('course');
+const courseSelect = document.querySelector('#course');
+if ([...courseSelect.options].some(option => option.value === selectedCourse)) courseSelect.value = selectedCourse;
 form.addEventListener('submit', event => {
   event.preventDefault();
   const data = new FormData(form);
@@ -42,3 +47,5 @@ document.querySelector('#download-inquiry').addEventListener('click', () => {
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
+
+}
