@@ -89,7 +89,7 @@ if (reflectionSlides.length) {
 const backToTop = document.createElement('button');
 backToTop.type = 'button';
 backToTop.className = 'back-to-top';
-backToTop.textContent = '↑';
+backToTop.textContent = '↑ Top';
 backToTop.setAttribute('aria-label', 'Back to top');
 backToTop.hidden = true;
 document.body.append(backToTop);
